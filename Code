@@ -1,0 +1,568 @@
+#include <stdio.h>
+#include <conio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
+FILE *dosya, *dersler , *yedek , *ders_dosya; // tüm fonksiyonlarda dosya islemleri yapılacağı için global tanımlama yapıldı
+
+struct ogrenci_bilgi
+{ //öğrenciye ait tutulacak veriler
+    char ad[20];
+    char soyad[20];
+    char bolum[50] = "BilgisayarMuhendisligi";
+    int numara;
+};
+
+struct ders_bilgi
+{ // derslere ait tutulacak veriler
+    char ders_bolum[100] = "BilgisayarMuhendisligi";
+    int ders_kodu;
+    char ders_adi[75];
+    int ders_kredisi;
+    int ders_akts;
+};
+
+struct ders_kayit_bilgi
+{ // ders kayıtlarına ait veriler
+    int ders_yil = {2022};
+    char ders_donem[10] = "Bahar";
+    struct ogrenci_bilgi;
+    struct ders_bilgi;
+    float basari_notu; 
+}; 
+
+//TÜM STRUCT YAPILARI
+
+struct ogrenci_bilgi ogrenci;
+struct ders_bilgi ders;
+struct ders_kayit_bilgi kayit;
+
+//TÜM FONKSİYONLAR
+
+void ogrenci_kayit_ekle(void);
+void ogrenci_kayit_listele(void);
+void ogrenci_kayit_sil(void);
+void ogrenci_kayit_ara(void);
+void ogrenci_kayit_guncelle(void);
+void ders_kayit_ekle(void);
+void ders_kayit_listele(void);
+void ogrenciye_ders_ata (void);
+
+
+int main()
+{
+
+    do
+    {
+        system("cls");
+        
+        printf("\t\t***************************\n");
+        printf("\t\t***DERS KAYIT OTOMASYONU***\n");
+        printf("\t\t***************************\n\n");
+
+
+        printf("\n\tMENU\n\n");
+        printf("1-Ogrenci Kaydi Ekle\n");
+        printf("2-Ogrenci Kayitlarini Listele\n");
+        printf("3-Ogrenci Kaydi Sil\n");
+        printf("4-Ogrenci Kaydi Arama\n");
+        printf("5-Ogrenci Kaydi Guncelleme\n");
+        printf("6-Ders Kaydi Ekle\n");
+        printf("7-Ders Kaydi Listele\n");
+        printf("8-Ogrenciye Ders Ata\n");
+        printf("9-Cikis Yap\n");
+        printf("Lutfen 1-9 arasinda bir secim yapin. ");
+
+        switch (getch())
+        {
+        case '1':
+        { 
+            system("cls");
+            ogrenci_kayit_ekle();
+            break;
+        }
+        case '2':
+        { 
+            system("cls");
+            ogrenci_kayit_listele();
+            break;
+        }
+        case '3':
+        { 
+            system("cls");
+            ogrenci_kayit_sil();
+            break;
+        }
+        case '4':
+        { 
+            system("cls");
+            ogrenci_kayit_ara();
+            break;
+        }
+        case '5':
+        { 
+            system("cls");
+            ogrenci_kayit_guncelle();
+            break;
+        }
+        case '6':
+        { 
+            system("cls");
+            ders_kayit_ekle();
+            break;
+        }
+        case '7':
+        { 
+            system("cls");
+            ders_kayit_listele();
+            break;
+        }
+        case '8':
+        { 
+            system("cls");
+            ogrenciye_ders_ata();
+            break;
+        }
+        case '9':
+        { 
+        printf("\nProgram kapatiliyor...\nLutfen bekleyiniz.");
+            return 0;
+            break;
+        }
+        default:
+        {
+            printf("Hatali Giris");
+        }
+        }
+    } while (1);
+    getch();
+    return 0;
+}
+
+
+void ogrenci_kayit_ekle(void)
+{
+
+    printf("*Ogrenci Kaydi Ekleme*\n");
+
+    int n;
+    int ogrenci_sayisi; //sınıf mevcudunu tanımlama
+
+	printf("Kac ogrenci girisi yapilacak? Lutfen ogrenci sayisini giriniz: ");
+    scanf("%d" ,&ogrenci_sayisi);
+
+
+    dosya = fopen("sinif.txt", "a+");
+
+    if (dosya == NULL)
+    {
+        puts("Dosya acilamadi.");
+        exit(1);
+    }
+    else{
+
+    printf("\nLutfen herhangi bir tusa basiniz.");
+
+    while(getch()!=27) {
+    	
+        fflush(stdin);
+       
+
+        puts("\nOgrenci bilgilerini girin: ");
+        
+     for(n=0;n<ogrenci_sayisi;n++)
+    {
+        printf("%d. Ogrenci ad: " , n+1);
+        scanf("%s",&ogrenci.ad);
+        printf("%d.Ogrenci soyadi: " , n+1);
+        scanf("%s",&ogrenci.soyad);
+        printf("Bolum: %s \n" , ogrenci.bolum);   
+        printf("%d. Ogrencinin numarasi: " , n+1);
+        scanf("%d", &ogrenci.numara);
+
+
+
+        fprintf(dosya, "%s\n" ,ogrenci.ad);
+        fprintf(dosya, "%s\n", ogrenci.soyad);
+        fprintf(dosya, "%s\n", ogrenci.bolum);
+        fprintf( dosya, "%d\n\n", ogrenci.numara);
+
+
+}
+    	printf("Ogrenci Kaydi Basariyla Tamamlanmistir! \n");
+    	printf("Cikis yapmak icin ESC'ye basin.");
+
+    }
+
+    }  
+
+    fclose(dosya);
+}
+
+
+
+void ogrenci_kayit_listele(void)
+{
+
+    printf("\n***Ogrenci Kaydi Listeleme***\n\n");
+
+    dosya = fopen("sinif.txt", "r"); 
+    if (dosya == NULL)
+    {
+        puts("Dosya acilamadi.");
+        exit(1);
+    }
+    	
+		printf("  Ad\t Soyad\t      Bolum\t      Numara\t");
+
+    while (!feof(dosya))  //dosyanın sonuna geldiğinde döngüden çıkmak için
+    { 
+        fflush(stdout);
+
+        fscanf(dosya, "%s %s %s %d \n ", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, &ogrenci.numara); 
+        
+            printf("\n %s  %s  %s    %d   \n  ", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, ogrenci.numara);
+        
+    }
+    
+    fclose(dosya);
+    
+    puts("\nBilgiler listelendi devam etmek icin bir tusa basin ...");
+    getch();
+}
+
+void ogrenci_kayit_sil(void)
+{
+
+    printf("***Ogrenci Kaydi Silme***\n\n");
+
+    int silinecek_numara, durum = 0; // durum 1 olduğunda kayit silinmis demektir
+
+    printf("\nSilinecek ogrencinin numarasini giriniz : ");
+    scanf("%d", &silinecek_numara);
+
+    dosya = fopen("sinif.txt", "r"); 
+    yedek = fopen("yedek.txt", "w");
+
+    if (dosya == NULL)
+    {
+        puts("Dosya acilamadi");
+        exit(1);
+    }
+
+    while (!feof(dosya))
+    {
+
+        fscanf(dosya, "%s %s %s %d\n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, &ogrenci.numara); // dosyayı okuyoruz ve degerleri belleğe yazıyoruz
+       
+	    if (silinecek_numara != ogrenci.numara)
+        { 
+            fprintf(yedek, "%s %s %s %d\n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, ogrenci.numara);
+
+            // Okunan değer yedek dosyasına yazılır
+        }
+
+        else
+            durum = 1; // Numara okunan değere eşitse okunan değer yedek dosyasına yazılmaz . Yani veri silinmiş olur.
+    }
+
+    fclose(dosya);
+    fclose(yedek);
+
+    if (durum == 1)
+    { 
+        remove("sinif.txt");              
+        rename("yedek.txt", "sinif.txt"); 
+        puts("Silme islemi tamamlandi devam etmek icin bir tusa basin");
+    }
+
+    else
+    {                        // durum=1 değilse okunan değer silinmemiştir
+        remove("yedek.txt");
+        printf(" %d numarasinda bir ogrenci bulunamadi devam etmek icin bir tusa basin ...", silinecek_numara);
+    }
+
+    fflush(stdin);
+    getch();
+}
+
+void ogrenci_kayit_ara(void)
+{
+    printf("***Ogrenci Kaydi Arama***\n\n");
+
+    int aranacak_numara;
+    int durum = 0; // durum=0 ise kayit bulunmamaktadir
+
+    fflush(stdin);
+
+    printf("\nAranacak ogrencinin numarasini giriniz: ");
+    scanf("%d", &aranacak_numara);
+
+    dosya = fopen("sinif.txt", "r");
+
+    if (dosya == NULL)
+    {
+        puts("Dosya acilamadi");
+        exit(1);
+    }
+    while (!feof(dosya))
+    { 
+
+        fscanf(dosya, "%s %s %s %d\n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, &ogrenci.numara); 
+
+        if (aranacak_numara == ogrenci.numara)
+        { 
+            printf("%s %s %s %d\n\n Devam etmek icin bir tusa basiniz...", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, ogrenci.numara);
+            durum = 1; // Aranan numara bulundu.
+        }
+    }
+
+    fclose(dosya);
+
+    if (durum == 0)
+    { // Aranan değer dosyada yoktur.
+        puts("Kayit bulunamadi devam etmek icin bir tusa basiniz...");
+    }
+    getch();
+}
+
+void ogrenci_kayit_guncelle(void)
+{
+
+    int guncellenecek_numara, durum = 0; // durum =0 ise değiştirme işlemi gerçekleşmemiştir.
+
+    printf("***Ogrenci Kaydi Guncelleme***\n\n");
+
+    printf("\nBilgilerini degistireceginiz ogrencinin numarasini giriniz: ");
+    scanf("%d", &guncellenecek_numara);
+    
+    dosya = fopen("sinif.txt", "r");
+    yedek = fopen("yedek.txt", "w");
+
+    if (dosya == NULL)
+    {
+        puts("Dosya acilamadi");
+        exit(1);
+    }
+
+    while (!feof(dosya))
+    {
+        fscanf(dosya, "%s %s %s %d\n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, &ogrenci.numara); 
+
+        if (guncellenecek_numara != ogrenci.numara)
+        {
+            fprintf(yedek, "%s %s %s %d\n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, ogrenci.numara); 
+        }
+
+        else
+        {	
+            fflush(stdin);
+
+            printf("Ogrencinin Adi : ");
+            gets(ogrenci.ad);
+            printf("Ogrencinin Soyadi : ");
+            gets(ogrenci.soyad);
+            printf("Ogrencinin Bolumu : %s \n", ogrenci.bolum);
+            printf("Ogrencinin Numarasi : ");
+            scanf("%d", &ogrenci.numara);
+            printf("\n");
+
+            fprintf(yedek, "%s %s %s %d \n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, ogrenci.numara); 
+            durum = 1;                                                                               
+        }
+    }
+
+    fclose(dosya);
+    fclose(yedek);
+
+    if (durum == 1)
+    { 
+        remove("sinif.txt");
+        rename("yedek.txt", "sinif.txt");
+
+        puts("Ogrenci bilgileri degistirildi devam etmek icin bir tusa basin...");
+    }
+
+    else
+    {
+        remove("yedek.txt");
+        printf("Ilgili ogrenci bulunamadi devam etmek icin bir tusa basin...");
+    }
+
+    fflush(stdin);
+    getch();
+}
+
+void ders_kayit_ekle(void)
+{
+
+    int i = 0;
+
+    printf("***Ders Kaydi Ekleme***\n");
+
+    dersler = fopen("dersler.txt", "a+");
+
+    if (dersler == NULL)
+    {
+        puts("Dosya acilamadi.");
+        exit(1);
+    }
+    
+    printf("\n Ders bilgilerini giriniz: \n");
+    do
+    {
+        i++;
+        
+        fflush(stdin); 
+
+        printf("Ogretim Yili : %d \n",  kayit.ders_yil);
+        printf("Donem        : %s \n", kayit.ders_donem);
+        printf("Bolum : %s \n",  ders.ders_bolum);
+        printf("%d. Dersin Adi : ", i);
+        gets(ders.ders_adi);
+        printf("%d. Dersin Kodu : ", i);
+        scanf("%d", &ders.ders_kodu);
+        printf("%d. Dersin Kredisi : ", i);
+        scanf("%d", &ders.ders_kredisi);
+        printf("%d. Dersin AKTS'si' : ", i);
+        scanf("%d", &ders.ders_akts);
+        printf("Bu dersin basari notunu giriniz:");
+    	scanf("%d" , &kayit.basari_notu);
+        printf("\n");
+
+      
+        fprintf(dersler, "%d %s %d %d\n", ders.ders_kodu, ders.ders_adi, ders.ders_kredisi, ders.ders_akts);
+        printf("Yeni bir kayit icin bir tusa, cikmak icin ESC tusuna basiniz.");
+        
+    } while (getch() != 27);
+	
+    fclose(dersler);
+    
+    printf("\nBilgiler kaydedildi devam etmek icin herhangi bir tusa basin ...");
+    getch();
+}
+
+void ders_kayit_listele(void)
+{
+
+    printf("*** Ders Kaydi Listeleme***\n\n");
+
+    dersler = fopen("dersler.txt", "r"); 
+    if (dersler == NULL)
+    {
+        printf("Dosya acilamadi.");
+        exit(1);
+    }
+    
+        printf("Ogretim Yili : %d \n",  kayit.ders_yil);
+        printf("Donem        : %s \n", kayit.ders_donem);
+    	printf("Dersin Kodu\t Adi\t     Kredisi\t     Akts\t");
+    	fprintf( dersler ,"Dersin Kodu\t Adi\t     Kredisi\t     Akts\t");
+
+
+    while (!feof(dersler)) //dosya sonuna kadar okuma
+    {
+
+        fflush(stdout);
+
+        fscanf(dersler, "%d %s %d %d \n", &ders.ders_kodu, ders.ders_adi, &ders.ders_kredisi, &ders.ders_akts);
+
+        if (ders.ders_adi != NULL)
+        {
+            printf("\n %d\t\t %s\t %d\t\t %d\t\t\n", ders.ders_kodu, ders.ders_adi, ders.ders_kredisi, ders.ders_akts);
+        }
+    }
+    
+    fclose(dersler);
+    printf("\nBilgiler listelendi devam etmek icin bir tusa basin ...");
+    getch();
+}
+
+
+void ogrenciye_ders_ata (void)
+{
+    printf("***Ogrenciye Ders Kaydi Atama***\n\n");
+
+    int atanacak_no , atanacak_kod;
+    int durum = 0; // durum=0 ise kayit bulunmamaktadir
+
+    fflush(stdin);
+
+    
+    ders_dosya= fopen("ogrenciye_atanan_dersler.txt", "a+");
+
+    
+     printf("\nAtanacak ders kodunu giriniz: ");
+    scanf("%d", &atanacak_kod);
+    
+        dersler = fopen("dersler.txt", "r");
+        printf("\nDevam etmek icin bir tusa basiniz...");
+
+
+ if (dersler == NULL)
+    {
+        puts("Dosya acilamadi");
+        exit(1);
+    }
+    
+       
+    while(!feof(dersler)) 
+	{
+		fscanf(dersler, "%d %s %d %d \n", &ders.ders_kodu, ders.ders_adi, &ders.ders_kredisi, &ders.ders_akts);
+
+		if (atanacak_kod == ders.ders_kodu)
+        { 
+        
+        		fprintf(ders_dosya, "%d %s %d %d \n", ders.ders_kodu, ders.ders_adi, ders.ders_kredisi, ders.ders_akts);
+        		fprintf(ders_dosya, "Ogrenci Numaralari:\n");
+
+
+            durum = 1; // Aranan kod bulundu.
+            
+            
+             while(getch()!=27) {
+            
+              printf("\n Kaydedilecek ogrencinin numarasini giriniz: ");
+    scanf("%d", &atanacak_no);
+
+    dosya = fopen("sinif.txt", "r");
+
+
+    if (dosya == NULL)
+    {
+        puts("Dosya acilamadi");
+        exit(1);
+    }
+    while (!feof(dosya))
+    { 
+
+        fscanf(dosya, "%s %s %s %d\n", ogrenci.ad, ogrenci.soyad, ogrenci.bolum, &ogrenci.numara); 
+
+        if (atanacak_no == ogrenci.numara)
+        { 
+            durum = 1; // Aranan isim bulundu.
+            
+        }
+    }
+    if(durum==1)
+    {
+    	fprintf(ders_dosya,"%d \n" , atanacak_no);
+    	printf("\nBasariyla ders atamasi yapildi.\n");
+    	printf("Cikis yapmak icin ESC'ye, devam etmek icin ise herhangi bir tusa basiniz.");
+	}
+	
+    fclose(dosya);
+
+    if (durum == 0)
+    { 
+        puts("Kayit bulunamadi devam etmek icin bir tusa basiniz...");
+    } }
+        }
+		
+	 } 
+    fclose(ders_dosya);
+    fclose(dersler);
+
+}
+  

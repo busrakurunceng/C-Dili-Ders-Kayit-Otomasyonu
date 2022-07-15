@@ -1,0 +1,18 @@
+Busra Kurun BilgisayarMuhendisligi 36
+Sila Ertug BilgisayarMuhendisligi 35
+Ekin Oguz BilgisayarMuhendisligi 55
+Enes
+Demir
+BilgisayarMuhendisligi
+703
+
+Berkay
+Tuncer
+BilgisayarMuhendisligi
+66
+
+Nuri
+Kurun
+BilgisayarMuhendisligi
+55
+

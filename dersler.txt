@@ -1,0 +1,4 @@
+101 Programlama 5 6
+102 Yazilim 5 6
+103 Etik 4 5
+104 Fizik 5 6

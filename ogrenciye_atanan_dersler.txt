@@ -1,0 +1,18 @@
+102 Yazilim 5 6 
+Ogrenci Numaralari:
+36 
+Ogrenci Numaralari:
+33 
+Ogrenci Numaralari:
+55 
+101 Programlama 5 6 
+Ogrenci Numaralari:
+33 
+36 
+55 
+15 
+104 Fizik 5 6 
+Ogrenci Numaralari:
+36 
+33 
+72 
